@@ -3,10 +3,13 @@ import React from "react";
 import styled from "styled-components";
 import { ShoppingCartOutlined } from '@mui/icons-material';
 import { Badge } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from "../redux/store";
+
 
 const Container = styled.div`
   height: 60px;
-
 `;
 
 const Wrapper = styled.div`
@@ -25,7 +28,6 @@ const Left = styled.div`
 const Language = styled.span`
   font-size: 14px;
   cursor: pointer;
-
 `;
 
 const SearchContainer = styled.div`
@@ -38,6 +40,7 @@ const SearchContainer = styled.div`
 
 const Input = styled.input`
   border: none;
+  outline: none;
 `;
 
 const Center = styled.div`
@@ -45,9 +48,14 @@ const Center = styled.div`
   text-align: center;
 `;
 
+const StyledLink = styled(Link)`
+  text-decoration: none; 
+  color: inherit; 
+`;
+
 const Logo = styled.h1`
   font-weight: bold;
-
+  color: black; /* Your default logo color */
 `;
 
 const Right = styled.div`
@@ -55,17 +63,19 @@ const Right = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-
 `;
 
 const MenuItem = styled.div`
   font-size: 14px;
   cursor: pointer;
   margin-left: 25px;
-
 `;
 
 const Navbar: React.FC = () => {
+
+  const quantity = useSelector((state: RootState) => state.cart.quantity);
+
+
   return (
     <Container>
       <Wrapper>
@@ -77,16 +87,20 @@ const Navbar: React.FC = () => {
           </SearchContainer>
         </Left>
         <Center>
-          <Logo>Fashion Store.</Logo>
+          <StyledLink to="/">
+            <Logo>Fashion Store.</Logo>
+          </StyledLink>
         </Center>
         <Right>
           <MenuItem>REGISTER</MenuItem>
           <MenuItem>SIGN IN</MenuItem>
+        <StyledLink to="/cart">
           <MenuItem>
-            <Badge badgeContent={4} color="primary">
+            <Badge badgeContent={quantity} color="primary">
               <ShoppingCartOutlined />
             </Badge>
           </MenuItem>
+          </StyledLink>
         </Right>
       </Wrapper>
     </Container>

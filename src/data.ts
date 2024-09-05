@@ -32,14 +32,14 @@ interface SliderItem {
     },
     {
       id: 2,
-      img: "../public/pics/male.jpg",
+      img: "../public/pics/product5.jpg",
       title: "AUTUMN COLLECTION",
       desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
       bg: "fcf1ed",
     },
     {
       id: 3,
-      img: "../public/pics/male3.jpg",
+      img: "../public/pics/product6.jpg",
       title: "LOUNGEWEAR LOVE",
       desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
       bg: "fbf0f4",
@@ -49,21 +49,21 @@ interface SliderItem {
   export const categories: Category[] = [
     {
       id: 1,
-      img: "../public/pics/cat1.jpg",
+      img: "../public/pics/product2.jpg",
       title: "SHIRT STYLE!",
-      cat:"women",
+      cat:"man",
     },
     {
       id: 2,
-      img: "../public/pics/cat3.jpg",
+      img: "../public/pics/product1.jpg",
       title: "T-shirts",
-      cat:"shirts"
+      cat:"women"
     },
     {
       id: 3,
-      img: "../public/pics/cat2.jpg",
+      img: "../public/pics/product12.png",
       title: "LIGHT JACKETS",
-      cat:"jacket"
+      cat:"kids"
     },
   ];
   
