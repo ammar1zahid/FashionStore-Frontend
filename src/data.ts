@@ -32,15 +32,15 @@ interface SliderItem {
     },
     {
       id: 2,
-      img: "../public/pics/product5.jpg",
+      img: "../public/pics/autom.png",
       title: "AUTUMN COLLECTION",
       desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
       bg: "fcf1ed",
     },
     {
       id: 3,
-      img: "../public/pics/product6.jpg",
-      title: "LOUNGEWEAR LOVE",
+      img: "../public/pics/winter.png",
+      title: "Winter Collection",
       desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
       bg: "fbf0f4",
     },
@@ -50,19 +50,19 @@ interface SliderItem {
     {
       id: 1,
       img: "../public/pics/product2.jpg",
-      title: "SHIRT STYLE!",
+      title: "Male STYLE!",
       cat:"man",
     },
     {
       id: 2,
       img: "../public/pics/product1.jpg",
-      title: "T-shirts",
+      title: "Female STYLE!",
       cat:"women"
     },
     {
       id: 3,
       img: "../public/pics/product12.png",
-      title: "LIGHT JACKETS",
+      title: "Kids STYLE!",
       cat:"kids"
     },
   ];

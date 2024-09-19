@@ -13,7 +13,7 @@ function Home() {
     <Navbar/>
     <Slider/>
     <Categories/>
-    <Products/>
+    <Products cat={""} filters={{}} sort={""}/>
     <Newsletter/>
     <Footer/>
     </div>
