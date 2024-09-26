@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { fetchComments, addComment } from "../redux/apiCalls"; // Import Redux API call functions
 import { RootState } from "../redux/store"; 
 import { IComment } from "../redux/commentRedux"; 
+import { format } from "timeago.js";
 
 
 const Container = styled.div`
@@ -209,7 +210,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ productId }) => {
                 <CommentText>{c.comment}</CommentText>
               </CommentContent>
               {/* <TimeAgo>  <Moment fromNow>{c.createdAt}</Moment></TimeAgo> */}
-              <TimeAgo>  {c.createdAt}</TimeAgo>
+              <TimeAgo>  {format(c.createdAt)}</TimeAgo>
             </CommentItem>
           ))
         )}
