@@ -8,11 +8,11 @@ interface ArrowProps {
 }
 
 interface WrapperProps {
-  slideIndex: number;
+  $slideIndex: number;
 }
 
 interface SlideProps {
-  bg: string;
+  $bg: string;
 }
 
 const Container = styled.div`
@@ -26,7 +26,7 @@ const Container = styled.div`
 const Arrow = styled.div<ArrowProps>`
   width: 50px;
   height: 50px;
-  background-color: rgba(0, 128, 128, 0.8); /* Teal background */
+  background-color: rgba(0, 128, 128, 0.8);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -51,7 +51,7 @@ const Wrapper = styled.div<WrapperProps>`
   height: 100%;
   display: flex;
   transition: transform 1.5s ease-in-out;
-  transform: translateX(${(props) => props.slideIndex * -100}vw);
+  transform: translateX(${(props) => props.$slideIndex * -100}vw);
 `;
 
 const Slide = styled.div<SlideProps>`
@@ -59,7 +59,7 @@ const Slide = styled.div<SlideProps>`
   height: 100vh;
   display: flex;
   align-items: center;
-  background-color: #fff; /* White background */
+  background-color: ${(props) => props.$bg};
   position: relative;
   overflow: hidden;
 `;
@@ -73,7 +73,10 @@ const ImgContainer = styled.div`
 `;
 
 const Image = styled.img`
-  height: 80%;
+  height: auto;
+  width: 100%;
+  max-height: 80%;
+  object-fit: cover;
   transition: transform 0.3s ease;
 
   &:hover {
@@ -85,7 +88,7 @@ const InfoContainer = styled.div`
   flex: 1;
   padding: 50px;
   text-align: left;
-  color: #000; /* Teal text color */
+  color: #000;
   position: relative;
   z-index: 1;
 `;
@@ -94,7 +97,7 @@ const Title = styled.h1`
   font-size: 64px;
   margin-bottom: 20px;
   font-weight: bold;
-  color: #000; /* Teal for title */
+  color: #000;
 `;
 
 const Desc = styled.p`
@@ -102,7 +105,7 @@ const Desc = styled.p`
   font-weight: 300;
   letter-spacing: 2px;
   margin-bottom: 20px;
-  color: teal; /* Teal for description */
+  color: teal;
 `;
 
 const Button = styled.button`
@@ -128,9 +131,9 @@ const Slider: React.FC = () => {
   useEffect(() => {
     const autoplay = setInterval(() => {
       setSlideIndex((prevIndex) => (prevIndex < sliderItems.length - 1 ? prevIndex + 1 : 0));
-    }, 5000); // Change slide every 5 seconds
+    }, 5000);
 
-    return () => clearInterval(autoplay); // Cleanup on unmount
+    return () => clearInterval(autoplay);
   }, []);
 
   const handleClick = (direction: "left" | "right") => {
@@ -146,9 +149,9 @@ const Slider: React.FC = () => {
       <Arrow direction="left" onClick={() => handleClick("left")}>
         <ArrowLeftOutlined style={{ color: "white" }} />
       </Arrow>
-      <Wrapper slideIndex={slideIndex}>
+      <Wrapper $slideIndex={slideIndex}>
         {sliderItems.map((item) => (
-          <Slide bg={item.bg} key={item.id}>
+          <Slide $bg={item.bg} key={item.id}>
             <ImgContainer>
               <Image src={item.img} />
             </ImgContainer>

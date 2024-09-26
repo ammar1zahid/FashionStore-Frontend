@@ -7,9 +7,10 @@ import {
   LogoutOutlined,
   MenuOutlined,
   CloseOutlined,
-  FavoriteBorderOutlined, // Icon for Wishlist
-  LocationOnOutlined,     // Icon for Address
-  PaymentOutlined          // Icon for Payment
+  FavoriteBorderOutlined, 
+  LocationOnOutlined,    
+  PaymentOutlined,
+  AccountBox          
 } from '@mui/icons-material';
 import { Badge } from '@mui/material';
 import { Link } from 'react-router-dom';
@@ -34,6 +35,10 @@ const Wrapper = styled.div`
   justify-content: space-between;
   max-width: 1200px;
   margin: 0 auto;
+
+  @media (max-width: 768px) {
+    padding: 0 10px; /* Less padding on smaller screens */
+  }
 `;
 
 // Left section of the navbar
@@ -69,6 +74,10 @@ const SearchContainer = styled.div`
   &:hover {
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   }
+
+  @media (max-width: 768px) {
+    margin-left: 10px; /* Adjust margin on smaller screens */
+  }
 `;
 
 // Search input
@@ -92,6 +101,10 @@ const Logo = styled.h1`
   color: #333;
   font-size: 24px;
   letter-spacing: 2px;
+
+  @media (max-width: 768px) {
+    font-size: 20px; /* Smaller logo on mobile */
+  }
 `;
 
 // Right section of the navbar
@@ -100,6 +113,10 @@ const Right = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+
+  @media (max-width: 768px) {
+    flex: 2; /* More space for icons on mobile */
+  }
 `;
 
 // Menu items
@@ -114,16 +131,20 @@ const MenuItem = styled.div`
     color: #004d40;
     transform: scale(1.1);
   }
+
+  @media (max-width: 768px) {
+    margin-left: 15px; /* Adjust margin on smaller screens */
+  }
 `;
 
 // Sidebar Container (Collapsible)
-const SidebarContainer = styled.div<{ isOpen: boolean }>`
+const SidebarContainer = styled.div<{ $isOpen: boolean }>`
   width: 250px;
   height: 100vh;
   position: fixed;
   top: 0;
   right: 0;
-  transform: ${({ isOpen }) => (isOpen ? 'translateX(0)' : 'translateX(100%)')}; /* Sidebar is hidden by default */
+  transform: ${({ $isOpen }) => ($isOpen ? 'translateX(0)' : 'translateX(100%)')}; /* Sidebar is hidden by default */
   background-color: #fff;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease; /* Smooth transition */
@@ -132,6 +153,10 @@ const SidebarContainer = styled.div<{ isOpen: boolean }>`
   flex-direction: column;
   padding: 20px;
   overflow-y: auto; /* Prevent sidebar overflow */
+
+  @media (max-width: 768px) {
+    width: 200px; /* Adjust width for mobile */
+  }
 `;
 
 // Sidebar Menu Items
@@ -235,7 +260,7 @@ const Navbar: React.FC = () => {
       </Wrapper>
 
       {/* Collapsible Sidebar */}
-      <SidebarContainer isOpen={isSidebarOpen}>
+      <SidebarContainer $isOpen={isSidebarOpen}>
         <CloseIcon onClick={toggleSidebar} />
         <SidebarItem to="/wishlist">
           <FavoriteBorderOutlined />
@@ -248,6 +273,10 @@ const Navbar: React.FC = () => {
         <SidebarItem to="/payment">
           <PaymentOutlined />
           <SidebarText>Payment</SidebarText>
+        </SidebarItem>
+        <SidebarItem to="/profile">
+          <AccountBox />
+          <SidebarText>Profile</SidebarText>
         </SidebarItem>
       </SidebarContainer>
     </Container>

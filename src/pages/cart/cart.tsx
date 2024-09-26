@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import StripeCheckout, { Token } from "react-stripe-checkout";
 import { useEffect, useState } from "react";
 import { makeRequest } from "../../axios";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   background-color: #f5f5f5;
@@ -66,6 +67,10 @@ const TopText = styled.span`
   margin: 0px 10px;
   font-size: 16px;
   color: #333;
+
+  &:hover {
+    text-decoration: none; // Remove underline on hover
+  }
 `;
 
 const Bottom = styled.div`
@@ -229,7 +234,9 @@ const RemoveButton = styled.button`
 const Cart: React.FC = () => {
   const [stripeToken, setStripeToken] = useState<Token | null>(null);
   const cart = useSelector((state: RootState) => state.cart);
-  const KEY = "pk_test_51Pp4vH01nfJPbaYzsgISrtJ9kjPRGw5YlOzQ5YVE31vDuiTMsMtqY1xywxJNAmGHzAkQhQSWHLmiihNJlDZsbRvP008pVcy9jb";
+  const wishlist = useSelector((state: RootState) => state.wishlist);
+  const KEY =
+    "pk_test_51Pp4vH01nfJPbaYzsgISrtJ9kjPRGw5YlOzQ5YVE31vDuiTMsMtqY1xywxJNAmGHzAkQhQSWHLmiihNJlDZsbRvP008pVcy9jb";
   const dispatch = useDispatch();
 
   const handleIncrease = (index: number) => {
@@ -277,9 +284,14 @@ const Cart: React.FC = () => {
           <TopButton>CONTINUE SHOPPING</TopButton>
           <TopTexts>
             <TopText>Shopping Bag({cart.products.length})</TopText>
-            <TopText>Your Wishlist (0)</TopText>
+            <Link
+              to="/wishlist"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <TopText>Your Wishlist ({wishlist.quantity})</TopText>
+            </Link>
           </TopTexts>
-          <TopButton type="filled">CHECKOUT NOW</TopButton>
+          {/* <TopButton type="filled">CHECKOUT NOW</TopButton> */}
         </Top>
         <Bottom>
           <Info>

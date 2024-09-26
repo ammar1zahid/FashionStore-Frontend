@@ -1,4 +1,4 @@
-import { Add, Remove } from "@mui/icons-material";
+import { Add, Remove, Star, StarBorder } from "@mui/icons-material";
 import styled from "styled-components";
 import Announcement from "../../components/Annoucement";
 import Footer from "../../components/Footer";
@@ -6,10 +6,19 @@ import Navbar from "../../components/Navbar";
 import Newsletter from "../../components/NewLetter";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { makeRequest } from "../../axios";
+import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "../../redux/cartRedux";
-import { useDispatch } from "react-redux";
+import RecommendedProducts from "../../components/RecommendedProducts";
+import {
+  fetchProductRating,
+  fetchUserProductRating,
+  addOrUpdateRating,
+} from "../../redux/apiCalls";
+import { makeRequest } from "../../axios";
+import { RootState } from "../../redux/store";
+import CommentSection from "../../components/Comments";
 
+// Product Interface
 interface IProduct {
   _id: string;
   title: string;
@@ -23,7 +32,7 @@ interface IProduct {
 }
 
 const Container = styled.div`
-  background: linear-gradient(135deg, #f0f8ff, #e6f7ff); /* Light gradient background */
+  background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
 `;
 
 const Wrapper = styled.div`
@@ -43,12 +52,12 @@ const Image = styled.img`
   width: 90%;
   height: 90vh;
   object-fit: cover;
-  border-radius: 15px; /* Rounded corners */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease-in-out;
 
   &:hover {
-    transform: scale(1.05); /* Slight zoom effect on hover */
+    transform: scale(1.05);
   }
 `;
 
@@ -106,7 +115,7 @@ const FilterColor = styled.div<{ color: string }>`
   transition: transform 0.3s ease;
 
   &:hover {
-    transform: scale(1.2); /* Slightly enlarges on hover */
+    transform: scale(1.2);
   }
 `;
 
@@ -158,31 +167,85 @@ const Button = styled.button`
 
   &:hover {
     background-color: #006666;
-    transform: scale(1.05); /* Slight zoom on hover */
+    transform: scale(1.05);
   }
+`;
+
+const RatingContainer = styled.div`
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+`;
+
+const StarContainer = styled.div`
+  cursor: pointer;
+  margin-right: 10px;
+`;
+
+const SubmitRatingButton = styled(Button)`
+  padding: 10px 20px;
+  background-color: #ffb400;
 `;
 
 const Product: React.FC = () => {
   const location = useLocation();
-  const id = location.pathname.split("/")[2];
-
+  const id = location.pathname.split("/")[2]; // Extract product ID from URL
+  // Product, rating, and UI state
   const [product, setProduct] = useState<IProduct>({} as IProduct);
   const [quantity, setQuantity] = useState<number>(1);
   const [color, setColor] = useState<string>("");
   const [size, setSize] = useState<string>("");
+  const [rating, setRating] = useState<number>(0); // Selected rating by the user
+
+  const userId = useSelector((state: RootState) => state.user.currentUser?._id);
+  const userRating = useSelector((state: RootState) =>
+    state.rating.ratings.find((r) => r.userId === userId && r.productId === id)
+  );
+  const productRating = useSelector(
+    (state: RootState) => state.rating.productRating
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
     const getProduct = async () => {
       try {
-        const res = await makeRequest.get("/products/" + id);
+        // Reset productRating and userRating when switching products
+        dispatch({ type: "RESET_RATINGS" });
+  
+        const res = await makeRequest.get(`/products/${id}`);
         setProduct(res.data);
       } catch (err) {
         console.log(err);
       }
     };
+  
+    const getRatingsData = async () => {
+      try {
+        if (userId) {
+          // Fetch user's rating for the product
+          await fetchUserProductRating(dispatch, userId, id);
+        }
+  
+        // Fetch product's overall rating
+        await fetchProductRating(dispatch, id);
+      } catch (error) {
+        console.error("Error fetching ratings data", error);
+      }
+    };
+  
     getProduct();
-  }, [id]);
+    getRatingsData();
+  }, [id, dispatch, userId]);
+  
+
+  // Update rating in component state after fetching
+  useEffect(() => {
+    if (userRating) {
+      setRating(userRating.rating); // Set rating to the user's previously submitted rating
+    } else {
+      setRating(0); // Reset rating if no user rating
+    }
+  }, [userRating]);
 
   const handleQuantity = (type: string) => {
     if (type === "dec") {
@@ -204,6 +267,17 @@ const Product: React.FC = () => {
     );
   };
 
+  const handleRating = async () => {
+    try {
+      if (userId) {
+        await addOrUpdateRating(dispatch, userId, id, rating);
+        alert("Thank you for your rating!");
+      }
+    } catch (error) {
+      console.error("Error submitting rating", error);
+    }
+  };
+
   return (
     <Container>
       <Navbar />
@@ -220,13 +294,7 @@ const Product: React.FC = () => {
             <Filter>
               <FilterTitle>Color</FilterTitle>
               {product.color?.map((c) => (
-                <FilterColor
-                  color={c}
-                  key={c}
-                  onClick={() => {
-                    setColor(c);
-                  }}
-                />
+                <FilterColor color={c} key={c} onClick={() => setColor(c)} />
               ))}
             </Filter>
             <Filter>
@@ -254,8 +322,41 @@ const Product: React.FC = () => {
             </AmountContainer>
             <Button onClick={handleCart}>ADD TO CART</Button>
           </AddContainer>
+
+          <RatingContainer>
+            <FilterTitle>Your Rating:</FilterTitle>
+            <StarContainer>
+              {[1, 2, 3, 4, 5].map((star) =>
+                star <= rating ? (
+                  <Star
+                    key={star}
+                    onClick={() => setRating(star)}
+                    style={{ color: "#ffb400" }}
+                  />
+                ) : (
+                  <StarBorder key={star} onClick={() => setRating(star)} />
+                )
+              )}
+            </StarContainer>
+            <SubmitRatingButton onClick={handleRating}>
+              Submit Rating
+            </SubmitRatingButton>
+          </RatingContainer>
+          
+          {productRating && productRating.totalRatings > 0 ? (
+            <>
+              <Desc>
+                Overall Rating: {productRating.averageRating.toFixed(1)} / 5
+              </Desc>
+              <Desc>Total Ratings: {productRating.totalRatings}</Desc>
+            </>
+          ) : (
+            <Desc>No ratings available for this product yet.</Desc>
+          )}
         </InfoContainer>
       </Wrapper>
+      <CommentSection productId={id}/>
+      <RecommendedProducts productId={id} />
       <Newsletter />
       <Footer />
     </Container>

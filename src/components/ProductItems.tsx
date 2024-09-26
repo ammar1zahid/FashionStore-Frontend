@@ -1,15 +1,16 @@
 import React from "react";
 import {
   FavoriteBorderOutlined,
-  FavoriteOutlined, // Import the filled icon
+  FavoriteOutlined,
   SearchOutlined,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux"; // Redux hooks
-import { addToWishlist, removeFromWishlist } from "../redux/apiCalls"; // Import the API call functions
-import { RootState } from "../redux/store"; // Import your root state if you're using TypeScript
+import { useDispatch, useSelector } from "react-redux";
+import { addToWishlist, removeFromWishlist } from "../redux/apiCalls";
+import { RootState } from "../redux/store";
 
+// Styled Components
 const Info = styled.div`
   opacity: 0;
   width: 100%;
@@ -17,13 +18,33 @@ const Info = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%);
+  background: rgba(0, 0, 0, 0.5); /* Slightly darker background */
   z-index: 3;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: center; /* Center everything vertically */
   transition: opacity 0.3s ease;
   cursor: pointer;
+`;
+
+const TitlePriceContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 15px;
+`;
+
+const Title = styled.h2`
+  font-size: 1.4rem;
+  color: white;
+  margin-bottom: 5px;
+`;
+
+const Price = styled.span`
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
 `;
 
 const Circle = styled.div`
@@ -65,6 +86,12 @@ const Image = styled.img`
   z-index: 2;
 `;
 
+const IconContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Space between the icons */
+`;
+
 const Icon = styled.div`
   width: 40px;
   height: 40px;
@@ -73,7 +100,6 @@ const Icon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 10px;
   transition: background-color 0.3s ease, transform 0.3s ease;
   cursor: pointer;
 
@@ -88,37 +114,33 @@ const StyledLink = styled(Link)`
   color: inherit;
 `;
 
+// Component
 interface ProductProps {
   item: {
     _id: string;
     img: string;
+    title: string;
+    price: number;
   };
 }
+
 
 const Product: React.FC<ProductProps> = ({ item }) => {
   const dispatch = useDispatch();
   const userId = useSelector((state: RootState) => state.user.currentUser?._id);
-  
-  
+
   // Fetch wishlist from Redux store
   const wishlist = useSelector((state: RootState) => state.wishlist.products);
-  console.log("wishlist from page ",wishlist)
 
   // Check if the current item is in the wishlist
-   const isInWishlist = wishlist.some((wishlistItem) =>wishlistItem.productId === item._id);
-  //  const isInWishlist = wishlist.some((wishlistItem) => console.log("wishlist id: ",wishlistItem._id ));
-   //const isInWishlist = wishlist.some((wishlistItem) => console.log("wishlist product id: ",wishlistItem.productId ));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const isInWishlist = wishlist.some((wishlistItem : any) => wishlistItem.productId === item._id);
 
   const handleToggleWishlist = () => {
-    console.log("wishlist in toggle ",wishlist)
-    
     if (userId) {
-
       if (isInWishlist) {
-        // If the item is already in the wishlist, remove it
         removeFromWishlist(dispatch, userId, item._id);
       } else {
-        // If the item is not in the wishlist, add it
         addToWishlist(dispatch, userId, item._id);
       }
     } else {
@@ -129,21 +151,25 @@ const Product: React.FC<ProductProps> = ({ item }) => {
   return (
     <Container>
       <Circle />
-      <Image src={item.img} />
+      <Image src={item.img} alt={item.title} />
       <Info>
-        <Icon>
-          <StyledLink to={`/product/${item._id}`}>
-            <SearchOutlined />
-          </StyledLink>
-        </Icon>
-        <Icon onClick={handleToggleWishlist}>
-          {/* Toggle between filled and unfilled favorite icon */}
-          {isInWishlist ? (
-            <FavoriteOutlined /> // Show filled icon if in wishlist
-          ) : (
-            <FavoriteBorderOutlined /> // Show border icon if not in wishlist
-          )}
-        </Icon>
+        {/* Title and Price in the middle */}
+        <TitlePriceContainer>
+          <Title>{item.title}</Title>
+          <Price>${item.price.toFixed(2)}</Price>
+        </TitlePriceContainer>
+
+        {/* Icons in the third row */}
+        <IconContainer>
+          <Icon>
+            <StyledLink to={`/product/${item._id}`}>
+              <SearchOutlined />
+            </StyledLink>
+          </Icon>
+          <Icon onClick={handleToggleWishlist}>
+            {isInWishlist ? <FavoriteOutlined /> : <FavoriteBorderOutlined />}
+          </Icon>
+        </IconContainer>
       </Info>
     </Container>
   );

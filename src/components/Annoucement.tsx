@@ -16,8 +16,7 @@ const pulseAnimation = keyframes`
 
 const Container = styled.div`
   height: 50px; 
-  
-   background-color: #f0fcfa; 
+  background-color: #f0fcfa; 
   color: white;
   display: flex;
   align-items: center;
@@ -26,21 +25,53 @@ const Container = styled.div`
   font-weight: 600;
   position: relative;
   overflow: hidden;
-  animation: ${pulseAnimation} 5s infinite; /* Animation for attention */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
-  border-bottom: 2px solid #004d40; /* Border to enhance separation */
+  animation: ${pulseAnimation} 5s infinite; 
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); 
+  border-bottom: 2px solid #004d40; 
+
+  @media (max-width: 768px) {
+    height: 40px; 
+    font-size: 14px; 
+  }
+
+  @media (max-width: 480px) {
+    height: 35px; 
+    font-size: 12px; 
+  }
 `;
 
 const AnnouncementText = styled.span`
   display: flex;
   align-items: center;
   margin-left: 10px;
+
+  @media (max-width: 768px) {
+    margin-left: 8px; 
+  }
+
+  @media (max-width: 480px) {
+    margin-left: 5px; 
+  }
+`;
+
+const AnnouncementIconStyled = styled(AnnouncementIcon)`
+  margin-right: 10px;
+
+  @media (max-width: 768px) {
+    margin-right: 8px; 
+    font-size: 18px; 
+  }
+
+  @media (max-width: 480px) {
+    margin-right: 5px; 
+    font-size: 16px; 
+  }
 `;
 
 const Announcement: React.FC = () => {
   return (
     <Container>
-      <AnnouncementIcon style={{ marginRight: "10px" }} />
+      <AnnouncementIconStyled />
       <AnnouncementText>Super Deal! Free Shipping on Orders Over $50</AnnouncementText>
     </Container>
   );

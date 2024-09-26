@@ -1,5 +1,6 @@
 import Announcement from "../../components/Annoucement"
 import Categories from "../../components/Categories"
+import Featured from "../../components/Featured"
 import Footer from "../../components/Footer"
 import Navbar from "../../components/Navbar"
 import Newsletter from "../../components/NewLetter"
@@ -12,6 +13,7 @@ function Home() {
     <Announcement/>
     <Navbar/>
     <Slider/>
+    <Featured/>
     <Categories/>
     <Products cat={""} filters={{}} sort={""}/>
     <Newsletter/>
